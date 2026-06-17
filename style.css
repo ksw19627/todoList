@@ -547,6 +547,7 @@ body {
   background: var(--bg);
 }
 .oauth-btn svg { flex-shrink: 0; }
+.oauth-github:hover { border-color: #333; color: #333; }
 
 /* ===== Responsive ===== */
 @media (min-width: 600px) {

@@ -298,8 +298,9 @@ document.addEventListener('DOMContentLoaded', () => {
   // 로그아웃
   document.getElementById('signout-btn').addEventListener('click', signOutUser)
 
-  // Google OAuth
+  // OAuth 버튼
   document.getElementById('google-btn').addEventListener('click', () => signInWithProvider('google'))
+  document.getElementById('github-btn').addEventListener('click', () => signInWithProvider('github'))
 
   // 투두 추가 & 우선순위 칩
   document.getElementById('add-btn').addEventListener('click', addTodo)
