@@ -1,0 +1,415 @@
+/* ===== Reset ===== */
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+/* ===== Design Tokens ===== */
+:root {
+  --primary:        #7C4DFF;
+  --primary-dark:   #651FFF;
+  --primary-light:  #EDE7F6;
+  --on-primary:     #fff;
+
+  --surface:        #FFFBFE;
+  --surface-var:    #F3EFF4;
+  --outline:        #CAC4D0;
+  --on-surface:     #1C1B1F;
+  --on-surface-sub: #49454F;
+  --on-surface-dis: #CAC4D0;
+
+  --high-c:   #E53935;  --high-bg:   #FFEBEE;
+  --med-c:    #F57C00;  --med-bg:    #FFF3E0;
+  --low-c:    #388E3C;  --low-bg:    #E8F5E9;
+
+  --drop-line:  #7C4DFF;
+
+  --sh1: 0 1px 3px rgba(0,0,0,.12), 0 1px 2px rgba(0,0,0,.08);
+  --sh2: 0 3px 8px rgba(0,0,0,.12), 0 2px 4px rgba(0,0,0,.08);
+  --sh3: 0 10px 24px rgba(0,0,0,.12), 0 4px 8px rgba(0,0,0,.08);
+
+  --r-sm:   8px;
+  --r-md:   16px;
+  --r-lg:   24px;
+  --r-full: 100px;
+}
+
+/* ===== Base ===== */
+body {
+  min-height: 100vh;
+  background: linear-gradient(150deg, #EDE7F6 0%, #E8EAF6 55%, #E3F2FD 100%);
+  font-family: 'Noto Sans KR', sans-serif;
+  color: var(--on-surface);
+}
+
+/* ===== App shell ===== */
+.app {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+/* ===== Top App Bar ===== */
+.top-bar {
+  background: linear-gradient(135deg, #7C4DFF 0%, #E040FB 100%);
+  color: var(--on-primary);
+  padding: 8px 20px 24px;
+  display: flex;
+  align-items: flex-end;
+  gap: 12px;
+  box-shadow: var(--sh2);
+  position: relative;
+  overflow: hidden;
+}
+
+/* decorative circles */
+.top-bar::before {
+  content: '';
+  position: absolute;
+  top: -40px; right: -20px;
+  width: 130px; height: 130px;
+  border-radius: 50%;
+  background: rgba(255,255,255,.09);
+  pointer-events: none;
+}
+.top-bar::after {
+  content: '';
+  position: absolute;
+  bottom: -30px; left: 38%;
+  width: 90px; height: 90px;
+  border-radius: 50%;
+  background: rgba(255,255,255,.06);
+  pointer-events: none;
+}
+
+/* ===== LEGO Title ===== */
+.lego-title {
+  display: flex;
+  align-items: flex-end;
+  gap: 5px;
+  padding-top: 22px; /* studs 돌출 공간 확보 */
+}
+
+/* 글자 하나 = 레고 브릭 하나 */
+.lb {
+  position: relative;
+  width: 54px;
+  height: 54px;
+  border-radius: 5px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-family: 'Black Han Sans', 'Noto Sans KR', sans-serif;
+  font-size: 1.55rem;
+  color: #fff;
+  /* 윗면 하이라이트 + 아랫면 인너 섀도 + 3-D 측면 */
+  box-shadow:
+    inset 0  3px 0 rgba(255,255,255,.30),
+    inset 0 -3px 0 rgba(0,0,0,.22),
+    0  6px 0 rgba(0,0,0,.38),
+    0  8px 8px rgba(0,0,0,.18);
+  transition: transform .12s ease;
+}
+.lb:hover { transform: translateY(-4px); }
+
+/* 스터드 원기둥 몸통 */
+.lb::before {
+  content: '';
+  position: absolute;
+  top: -14px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 30px;
+  height: 14px;
+  background: inherit;
+  filter: brightness(1.07);
+  box-shadow:
+    inset  3px 0 0 rgba(255,255,255,.15),
+    inset -3px 0 0 rgba(0,0,0,.12);
+}
+
+/* 스터드 돔 꼭대기 */
+.lb::after {
+  content: '';
+  position: absolute;
+  top: -20px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 30px;
+  height: 10px;
+  background: inherit;
+  filter: brightness(1.25);
+  border-radius: 50%;
+  box-shadow:
+    inset 0 -2px 4px rgba(0,0,0,.20),
+    inset 0  3px 4px rgba(255,255,255,.35);
+}
+
+/* 클래식 LEGO 4색 */
+.c-red    { background: #DA291C; }
+.c-yellow { background: #F2CD37; color: #222; }
+.c-blue   { background: #006DB7; }
+.c-green  { background: #00A650; }
+
+/* 단어 사이 간격 벽돌 */
+.lb-gap { width: 10px; }
+
+/* ===== Main ===== */
+.main {
+  flex: 1;
+  padding: 20px 16px 48px;
+  width: 100%;
+  max-width: 600px;
+  margin: 0 auto;
+}
+
+/* ===== Material Card ===== */
+.md-card {
+  background: var(--surface);
+  border-radius: var(--r-lg);
+  box-shadow: var(--sh2);
+  padding: 20px;
+  margin-bottom: 20px;
+}
+
+/* ===== Floating Label Text Field (MD3) ===== */
+.text-field {
+  position: relative;
+  margin-bottom: 16px;
+}
+
+.text-field input {
+  width: 100%;
+  padding: 18px 16px 8px;
+  border: 1.5px solid var(--outline);
+  border-radius: var(--r-sm);
+  font-size: 1rem;
+  font-family: inherit;
+  background: transparent;
+  outline: none;
+  color: var(--on-surface);
+  transition: border-color .2s;
+}
+
+.text-field label {
+  position: absolute;
+  left: 16px;
+  top: 50%;
+  transform: translateY(-50%);
+  font-size: 1rem;
+  color: var(--on-surface-sub);
+  pointer-events: none;
+  transition: all .2s cubic-bezier(.4,0,.2,1);
+  background: var(--surface);
+  padding: 0 4px;
+  border-radius: 2px;
+}
+
+.text-field input:focus                  { border-color: var(--primary); }
+.text-field input:focus + label          { top: 0; font-size: .75rem; color: var(--primary); }
+.text-field input:not(:placeholder-shown) + label { top: 0; font-size: .75rem; }
+
+/* ===== Bottom Row ===== */
+.bottom-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+
+/* ===== Priority Chips ===== */
+.chip-group { display: flex; gap: 8px; flex-wrap: wrap; }
+
+.chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 6px 14px;
+  border-radius: var(--r-full);
+  border: 1.5px solid var(--outline);
+  background: transparent;
+  font-family: inherit;
+  font-size: .85rem;
+  font-weight: 500;
+  color: var(--on-surface-sub);
+  cursor: pointer;
+  transition: all .2s;
+  user-select: none;
+}
+
+.chip:hover {
+  background: rgba(124,77,255,.08);
+  border-color: var(--primary);
+}
+
+.chip.chip-selected {
+  background: var(--primary-light);
+  border-color: var(--primary);
+  color: var(--primary);
+}
+
+.chip-dot {
+  width: 8px; height: 8px;
+  border-radius: 50%;
+  flex-shrink: 0;
+}
+.dot-high   { background: var(--high-c); }
+.dot-medium { background: var(--med-c);  }
+.dot-low    { background: var(--low-c);  }
+
+/* ===== FAB Add Button ===== */
+.fab-btn {
+  width: 48px; height: 48px;
+  border-radius: var(--r-full);
+  background: var(--primary);
+  color: var(--on-primary);
+  border: none;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: var(--sh2);
+  transition: background .2s, box-shadow .2s, transform .15s;
+  flex-shrink: 0;
+}
+.fab-btn:hover {
+  background: var(--primary-dark);
+  box-shadow: var(--sh3);
+  transform: scale(1.06);
+}
+.fab-btn .material-icons-round { font-size: 1.4rem; }
+
+/* ===== Todo List ===== */
+#todo-list {
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.todo-item {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 14px 14px 14px 16px;
+  background: var(--surface);
+  border-radius: var(--r-md);
+  box-shadow: var(--sh1);
+  border-left: 5px solid transparent;
+  transition: box-shadow .2s, transform .15s;
+}
+
+.todo-item:hover {
+  box-shadow: var(--sh2);
+  transform: translateY(-1px);
+}
+
+.todo-item.priority-high   { border-left-color: var(--high-c); }
+.todo-item.priority-medium { border-left-color: var(--med-c);  }
+.todo-item.priority-low    { border-left-color: var(--low-c);  }
+
+/* drag handle */
+.drag-handle {
+  cursor: grab;
+  color: var(--on-surface-dis);
+  font-size: 1.1rem;
+  flex-shrink: 0;
+  user-select: none;
+  line-height: 1;
+}
+.drag-handle:active { cursor: grabbing; }
+
+/* checkbox */
+.todo-item input[type="checkbox"] {
+  width: 20px; height: 20px;
+  accent-color: var(--primary);
+  cursor: pointer;
+  flex-shrink: 0;
+}
+
+/* priority badge */
+.priority-badge {
+  font-size: .68rem;
+  font-weight: 700;
+  padding: 3px 9px;
+  border-radius: var(--r-full);
+  flex-shrink: 0;
+  letter-spacing: .03em;
+}
+.badge-high   { background: var(--high-bg); color: var(--high-c); }
+.badge-medium { background: var(--med-bg);  color: var(--med-c);  }
+.badge-low    { background: var(--low-bg);  color: var(--low-c);  }
+
+/* text */
+.todo-text {
+  flex: 1;
+  font-size: .95rem;
+  color: var(--on-surface);
+  word-break: break-word;
+  line-height: 1.5;
+}
+.todo-item.completed .todo-text {
+  text-decoration: line-through;
+  color: var(--on-surface-dis);
+}
+
+/* delete icon button */
+.delete-btn {
+  width: 34px; height: 34px;
+  border-radius: 50%;
+  background: transparent;
+  color: var(--on-surface-dis);
+  border: none;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: background .18s, color .18s;
+  flex-shrink: 0;
+}
+.delete-btn:hover {
+  background: var(--high-bg);
+  color: var(--high-c);
+}
+.delete-btn .material-icons-round { font-size: 1.15rem; }
+
+/* ===== Drag & Drop indicators ===== */
+.todo-item.dragging   { opacity: .35; }
+.todo-item.drop-above { border-top: 2.5px solid var(--drop-line); }
+.todo-item.drop-below { border-bottom: 2.5px solid var(--drop-line); }
+
+/* ===== Empty State ===== */
+.empty-state {
+  display: none;
+  flex-direction: column;
+  align-items: center;
+  padding: 52px 24px;
+  text-align: center;
+  animation: fadeUp .4s ease both;
+}
+.empty-state.visible { display: flex; }
+
+.empty-icon  { font-size: 4rem; margin-bottom: 16px; animation: bounce 2.4s ease-in-out infinite; }
+.empty-title { font-size: 1.05rem; font-weight: 700; color: var(--on-surface-sub); margin-bottom: 6px; }
+.empty-sub   { font-size: .85rem; color: var(--on-surface-dis); }
+
+@keyframes bounce {
+  0%,100% { transform: translateY(0); }
+  50%      { transform: translateY(-10px); }
+}
+@keyframes fadeUp {
+  from { opacity: 0; transform: translateY(12px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+/* ===== Responsive ===== */
+@media (min-width: 600px) {
+  .top-bar       { padding: 24px 32px 36px; }
+  .top-bar-title { font-size: 1.75rem; }
+  .main          { padding: 28px 24px 56px; }
+  .md-card       { padding: 28px; }
+}
+
+@media (max-width: 360px) {
+  .chip          { padding: 5px 10px; font-size: .78rem; }
+  .fab-btn       { width: 44px; height: 44px; }
+  .todo-item     { gap: 8px; padding: 12px 10px 12px 14px; }
+}

@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>오늘 할 일</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;500;700&family=Black+Han+Sans&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/icon?family=Material+Icons+Round" rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <div class="app">
+
+    <header class="top-bar">
+      <h1 class="lego-title">
+        <span class="lb c-red">오</span>
+        <span class="lb c-yellow">늘</span>
+        <span class="lb-gap"></span>
+        <span class="lb c-blue">할</span>
+        <span class="lb-gap"></span>
+        <span class="lb c-green">일</span>
+      </h1>
+    </header>
+
+    <main class="main">
+
+      <div class="add-card md-card">
+        <div class="text-field">
+          <input type="text" id="todo-input" placeholder=" " autocomplete="off">
+          <label for="todo-input">할 일을 입력하세요</label>
+        </div>
+        <div class="bottom-row">
+          <div class="chip-group" id="priority-chips">
+            <button class="chip" data-value="high" type="button">
+              <span class="chip-dot dot-high"></span>높음
+            </button>
+            <button class="chip chip-selected" data-value="medium" type="button">
+              <span class="chip-dot dot-medium"></span>중간
+            </button>
+            <button class="chip" data-value="low" type="button">
+              <span class="chip-dot dot-low"></span>낮음
+            </button>
+          </div>
+          <button id="add-btn" class="fab-btn" type="button" aria-label="추가">
+            <span class="material-icons-round">add</span>
+          </button>
+        </div>
+      </div>
+
+      <ul id="todo-list"></ul>
+
+      <div class="empty-state" id="empty-state">
+        <div class="empty-icon">🌸</div>
+        <p class="empty-title">할 일이 없어요!</p>
+        <p class="empty-sub">위에서 새 할 일을 추가해보세요 ✨</p>
+      </div>
+
+    </main>
+  </div>
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="app.js"></script>
+</body>
+</html>
