@@ -65,6 +65,18 @@ async function signOutUser() {
   // onAuthStateChange가 자동으로 인증 뷰로 복귀
 }
 
+async function signInWithProvider(provider) {
+  const { error } = await db.auth.signInWithOAuth({
+    provider,
+    options: {
+      redirectTo: window.location.origin + window.location.pathname
+    }
+  })
+  if (error) {
+    document.getElementById('auth-message').textContent = error.message
+  }
+}
+
 // --- DB 연동 ---
 
 async function loadTodos() {
@@ -285,6 +297,9 @@ document.addEventListener('DOMContentLoaded', () => {
 
   // 로그아웃
   document.getElementById('signout-btn').addEventListener('click', signOutUser)
+
+  // Google OAuth
+  document.getElementById('google-btn').addEventListener('click', () => signInWithProvider('google'))
 
   // 투두 추가 & 우선순위 칩
   document.getElementById('add-btn').addEventListener('click', addTodo)
