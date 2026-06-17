@@ -21,10 +21,39 @@
         <span class="lb-gap"></span>
         <span class="lb c-green">일</span>
       </h1>
+      <div class="user-info hidden" id="user-info">
+        <span class="user-email" id="user-email"></span>
+        <button class="signout-btn" id="signout-btn" aria-label="로그아웃">
+          <span class="material-icons-round">logout</span>
+        </button>
+      </div>
     </header>
 
-    <main class="main">
+    <!-- 인증 뷰 (초기 표시) -->
+    <div id="auth-view" class="main">
+      <div class="md-card auth-card">
+        <div class="auth-tabs">
+          <button class="auth-tab auth-tab-selected" data-mode="signin" type="button">로그인</button>
+          <button class="auth-tab" data-mode="signup" type="button">회원가입</button>
+        </div>
+        <div class="text-field">
+          <input type="email" id="auth-email" placeholder=" " autocomplete="email">
+          <label for="auth-email">이메일</label>
+        </div>
+        <div class="text-field">
+          <input type="password" id="auth-password" placeholder=" " autocomplete="current-password">
+          <label for="auth-password">비밀번호</label>
+        </div>
+        <p class="auth-message" id="auth-message"></p>
+        <button id="auth-btn" class="auth-submit-btn" type="button">
+          <span class="material-icons-round">login</span>
+          <span id="auth-btn-label">로그인</span>
+        </button>
+      </div>
+    </div>
 
+    <!-- 투두 뷰 (로그인 후 표시) -->
+    <div id="todo-view" class="main hidden">
       <div class="add-card md-card">
         <div class="text-field">
           <input type="text" id="todo-input" placeholder=" " autocomplete="off">
@@ -55,8 +84,8 @@
         <p class="empty-title">할 일이 없어요!</p>
         <p class="empty-sub">위에서 새 할 일을 추가해보세요 ✨</p>
       </div>
+    </div>
 
-    </main>
   </div>
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
   <script src="app.js"></script>

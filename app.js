@@ -8,6 +8,62 @@ const PRIORITY_ORDER = { high: 1, medium: 2, low: 3 }
 const PRIORITY_LABEL = { high: '높음', medium: '중간', low: '낮음' }
 let todos = []
 let dragId = null
+let currentUser = null
+
+// --- Auth 뷰 전환 ---
+
+function showAuthView() {
+  document.getElementById('auth-view').classList.remove('hidden')
+  document.getElementById('todo-view').classList.add('hidden')
+  document.getElementById('user-info').classList.add('hidden')
+  document.getElementById('auth-message').textContent = ''
+  document.getElementById('auth-email').value = ''
+  document.getElementById('auth-password').value = ''
+}
+
+function showTodoView() {
+  document.getElementById('auth-view').classList.add('hidden')
+  document.getElementById('todo-view').classList.remove('hidden')
+  document.getElementById('user-info').classList.remove('hidden')
+  document.getElementById('user-email').textContent = currentUser.email
+}
+
+// --- Auth 처리 ---
+
+async function handleAuth() {
+  const email    = document.getElementById('auth-email').value.trim()
+  const password = document.getElementById('auth-password').value
+  const msgEl    = document.getElementById('auth-message')
+  const isSignUp = document.querySelector('.auth-tab.auth-tab-selected').dataset.mode === 'signup'
+
+  msgEl.className = 'auth-message'
+  msgEl.textContent = ''
+
+  if (!email || !password) {
+    msgEl.textContent = '이메일과 비밀번호를 입력해주세요.'
+    return
+  }
+
+  if (isSignUp) {
+    const { data, error } = await db.auth.signUp({ email, password })
+    if (error) { msgEl.textContent = error.message; return }
+    if (!data.session) {
+      // 이메일 인증이 켜져 있을 때 — 확인 메일 안내
+      msgEl.classList.add('auth-message-success')
+      msgEl.textContent = '📧 이메일을 확인해 인증 링크를 클릭해주세요.'
+    }
+    // session이 있으면 onAuthStateChange가 자동으로 투두 뷰로 전환
+  } else {
+    const { error } = await db.auth.signInWithPassword({ email, password })
+    if (error) { msgEl.textContent = error.message; return }
+    // 성공 시 onAuthStateChange가 자동으로 투두 뷰로 전환
+  }
+}
+
+async function signOutUser() {
+  await db.auth.signOut()
+  // onAuthStateChange가 자동으로 인증 뷰로 복귀
+}
 
 // --- DB 연동 ---
 
@@ -16,16 +72,15 @@ async function loadTodos() {
     .from('todos')
     .select('*')
     .order('sort_order', { ascending: true })
-  if (error) { console.error('loadTodos:', error); return; }
+  if (error) { console.error('loadTodos:', error); return }
   todos = data
 }
 
-// 드래그·추가·삭제 후 배열 순서를 DB에 일괄 반영
 async function syncSortOrders() {
   if (todos.length === 0) return
   const updates = todos.map((t, i) => ({ id: t.id, sort_order: i }))
   const { error } = await db.from('todos').upsert(updates)
-  if (error) { console.error('syncSortOrders:', error); return; }
+  if (error) { console.error('syncSortOrders:', error); return }
   todos.forEach((t, i) => { t.sort_order = i })
 }
 
@@ -89,13 +144,12 @@ function renderTodos() {
 // --- CRUD ---
 
 async function addTodo() {
+  if (!currentUser) return
   const input = document.getElementById('todo-input')
   const text = input.value.trim()
   if (!text) return
 
   const priority = getSelectedPriority()
-
-  // 같은/상위 우선순위 항목 다음 위치 계산
   let insertAt = 0
   for (let i = 0; i < todos.length; i++) {
     if (PRIORITY_ORDER[todos[i].priority] <= PRIORITY_ORDER[priority]) insertAt = i + 1
@@ -103,10 +157,10 @@ async function addTodo() {
 
   const { data, error } = await db
     .from('todos')
-    .insert({ text, completed: false, priority, sort_order: insertAt })
+    .insert({ text, completed: false, priority, sort_order: insertAt, user_id: currentUser.id })
     .select()
     .single()
-  if (error) { console.error('addTodo:', error); return; }
+  if (error) { console.error('addTodo:', error); return }
 
   todos.splice(insertAt, 0, data)
   await syncSortOrders()
@@ -122,14 +176,14 @@ async function toggleTodo(id) {
     .from('todos')
     .update({ completed: !todo.completed })
     .eq('id', id)
-  if (error) { console.error('toggleTodo:', error); return; }
+  if (error) { console.error('toggleTodo:', error); return }
   todos = todos.map(t => t.id === id ? { ...t, completed: !t.completed } : t)
   renderTodos()
 }
 
 async function deleteTodo(id) {
   const { error } = await db.from('todos').delete().eq('id', id)
-  if (error) { console.error('deleteTodo:', error); return; }
+  if (error) { console.error('deleteTodo:', error); return }
   todos = todos.filter(t => t.id !== id)
   await syncSortOrders()
   renderTodos()
@@ -179,7 +233,6 @@ async function onDrop(e) {
   const newTargetIndex = todos.findIndex(t => t.id === targetId)
   todos.splice(isBelow ? newTargetIndex + 1 : newTargetIndex, 0, dragged)
 
-  // priority 변경 + 전체 순서 동기화
   await db.from('todos').update({ priority: dragged.priority }).eq('id', dragged.id)
   await syncSortOrders()
   renderTodos()
@@ -193,15 +246,51 @@ function onDragEnd() {
 
 // --- Init ---
 
-document.addEventListener('DOMContentLoaded', async () => {
-  await loadTodos()
-  renderTodos()
+document.addEventListener('DOMContentLoaded', () => {
 
+  // 인증 상태 변화 감지 — 뷰 전환의 핵심
+  db.auth.onAuthStateChange(async (event, session) => {
+    if (session) {
+      currentUser = session.user
+      showTodoView()
+      await loadTodos()
+      renderTodos()
+    } else {
+      currentUser = null
+      todos = []
+      showAuthView()
+    }
+  })
+
+  // 인증 탭 전환
+  document.querySelectorAll('.auth-tab').forEach(tab => {
+    tab.addEventListener('click', () => {
+      document.querySelectorAll('.auth-tab').forEach(t => t.classList.remove('auth-tab-selected'))
+      tab.classList.add('auth-tab-selected')
+      const isSignUp = tab.dataset.mode === 'signup'
+      document.getElementById('auth-btn-label').textContent = isSignUp ? '회원가입' : '로그인'
+      document.querySelector('#auth-btn .material-icons-round').textContent = isSignUp ? 'person_add' : 'login'
+      document.getElementById('auth-message').textContent = ''
+    })
+  })
+
+  // 인증 버튼 & 키보드
+  document.getElementById('auth-btn').addEventListener('click', handleAuth)
+  document.getElementById('auth-email').addEventListener('keydown', e => {
+    if (e.key === 'Enter') document.getElementById('auth-password').focus()
+  })
+  document.getElementById('auth-password').addEventListener('keydown', e => {
+    if (e.key === 'Enter') handleAuth()
+  })
+
+  // 로그아웃
+  document.getElementById('signout-btn').addEventListener('click', signOutUser)
+
+  // 투두 추가 & 우선순위 칩
   document.getElementById('add-btn').addEventListener('click', addTodo)
   document.getElementById('todo-input').addEventListener('keydown', e => {
     if (e.key === 'Enter') addTodo()
   })
-
   document.querySelectorAll('#priority-chips .chip').forEach(chip => {
     chip.addEventListener('click', () => {
       document.querySelectorAll('#priority-chips .chip').forEach(c => c.classList.remove('chip-selected'))

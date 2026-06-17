@@ -400,6 +400,110 @@ body {
   to   { opacity: 1; transform: translateY(0); }
 }
 
+/* ===== 유틸리티 ===== */
+.hidden { display: none !important; }
+
+/* ===== 헤더 유저 정보 ===== */
+.top-bar { justify-content: space-between; }
+
+.user-info {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  align-self: center;
+  padding-bottom: 4px;
+}
+
+.user-email {
+  font-size: .78rem;
+  color: rgba(255,255,255,.85);
+  max-width: 160px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.signout-btn {
+  width: 36px; height: 36px;
+  border-radius: 50%;
+  background: rgba(255,255,255,.18);
+  color: #fff;
+  border: none;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: background .2s;
+  flex-shrink: 0;
+}
+.signout-btn:hover { background: rgba(255,255,255,.30); }
+.signout-btn .material-icons-round { font-size: 1.1rem; }
+
+/* ===== 인증 카드 ===== */
+.auth-card {
+  max-width: 400px;
+  margin: 0 auto;
+}
+
+.auth-tabs {
+  display: flex;
+  border-bottom: 2px solid var(--outline);
+  margin-bottom: 24px;
+}
+
+.auth-tab {
+  flex: 1;
+  padding: 12px;
+  background: none;
+  border: none;
+  border-bottom: 2.5px solid transparent;
+  margin-bottom: -2px;
+  font-family: inherit;
+  font-size: 1rem;
+  font-weight: 500;
+  color: var(--on-surface-sub);
+  cursor: pointer;
+  transition: color .2s, border-color .2s;
+}
+.auth-tab.auth-tab-selected {
+  color: var(--primary);
+  border-bottom-color: var(--primary);
+}
+
+.auth-message {
+  font-size: .85rem;
+  color: var(--high-c);
+  min-height: 20px;
+  margin-bottom: 16px;
+  line-height: 1.4;
+}
+.auth-message.auth-message-success { color: var(--low-c); }
+
+.auth-submit-btn {
+  width: 100%;
+  padding: 14px;
+  background: var(--primary);
+  color: #fff;
+  border: none;
+  border-radius: var(--r-full);
+  font-family: inherit;
+  font-size: 1rem;
+  font-weight: 500;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  box-shadow: var(--sh2);
+  transition: background .2s, transform .1s, box-shadow .2s;
+}
+.auth-submit-btn:hover {
+  background: var(--primary-dark);
+  box-shadow: var(--sh3);
+  transform: translateY(-1px);
+}
+.auth-submit-btn .material-icons-round { font-size: 1.2rem; }
+
 /* ===== Responsive ===== */
 @media (min-width: 600px) {
   .top-bar       { padding: 24px 32px 36px; }
