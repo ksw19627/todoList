@@ -48,25 +48,27 @@ body {
 
 /* ===== Top App Bar ===== */
 .top-bar {
-  background: linear-gradient(135deg, #7C4DFF 0%, #E040FB 100%);
+  background:
+    radial-gradient(circle, rgba(255,255,255,.07) 1px, transparent 1px) 0 0 / 6px 6px,
+    linear-gradient(135deg, #1B0042 0%, #0D1B59 100%);
   color: var(--on-primary);
-  padding: 8px 20px 24px;
+  padding: 16px 20px 24px;
   display: flex;
-  align-items: flex-end;
+  align-items: center;
   gap: 12px;
   box-shadow: var(--sh2);
   position: relative;
   overflow: hidden;
 }
 
-/* decorative circles */
+/* decorative glow orbs */
 .top-bar::before {
   content: '';
   position: absolute;
   top: -40px; right: -20px;
   width: 130px; height: 130px;
   border-radius: 50%;
-  background: rgba(255,255,255,.09);
+  background: rgba(124,77,255,.18);
   pointer-events: none;
 }
 .top-bar::after {
@@ -75,81 +77,34 @@ body {
   bottom: -30px; left: 38%;
   width: 90px; height: 90px;
   border-radius: 50%;
-  background: rgba(255,255,255,.06);
+  background: rgba(64,196,255,.10);
   pointer-events: none;
 }
 
-/* ===== LEGO Title ===== */
-.lego-title {
+/* ===== Dot Title ===== */
+.dot-title {
   display: flex;
-  align-items: flex-end;
-  gap: 5px;
-  padding-top: 22px; /* studs 돌출 공간 확보 */
-}
-
-/* 글자 하나 = 레고 브릭 하나 */
-.lb {
-  position: relative;
-  width: 54px;
-  height: 54px;
-  border-radius: 5px;
-  display: inline-flex;
   align-items: center;
-  justify-content: center;
-  font-family: 'Black Han Sans', 'Noto Sans KR', sans-serif;
-  font-size: 1.55rem;
-  color: #fff;
-  /* 윗면 하이라이트 + 아랫면 인너 섀도 + 3-D 측면 */
-  box-shadow:
-    inset 0  3px 0 rgba(255,255,255,.30),
-    inset 0 -3px 0 rgba(0,0,0,.22),
-    0  6px 0 rgba(0,0,0,.38),
-    0  8px 8px rgba(0,0,0,.18);
-  transition: transform .12s ease;
-}
-.lb:hover { transform: translateY(-4px); }
-
-/* 스터드 원기둥 몸통 */
-.lb::before {
-  content: '';
-  position: absolute;
-  top: -14px;
-  left: 50%;
-  transform: translateX(-50%);
-  width: 30px;
-  height: 14px;
-  background: inherit;
-  filter: brightness(1.07);
-  box-shadow:
-    inset  3px 0 0 rgba(255,255,255,.15),
-    inset -3px 0 0 rgba(0,0,0,.12);
+  gap: 2px;
+  font-family: 'DotGothic16', monospace;
+  font-size: 2.6rem;
+  line-height: 1;
+  position: relative;
+  z-index: 1;
 }
 
-/* 스터드 돔 꼭대기 */
-.lb::after {
-  content: '';
-  position: absolute;
-  top: -20px;
-  left: 50%;
-  transform: translateX(-50%);
-  width: 30px;
-  height: 10px;
-  background: inherit;
-  filter: brightness(1.25);
-  border-radius: 50%;
-  box-shadow:
-    inset 0 -2px 4px rgba(0,0,0,.20),
-    inset 0  3px 4px rgba(255,255,255,.35);
+.dc {
+  display: inline-block;
+  transition: transform .15s;
 }
+.dc:hover { transform: scale(1.15); }
 
-/* 클래식 LEGO 4색 */
-.c-red    { background: #DA291C; }
-.c-yellow { background: #F2CD37; color: #222; }
-.c-blue   { background: #006DB7; }
-.c-green  { background: #00A650; }
+.dc1 { color: #ff6b6b; text-shadow: 0 0 10px #ff6b6b, 0 0 28px rgba(255,107,107,.5); }
+.dc2 { color: #ffd93d; text-shadow: 0 0 10px #ffd93d, 0 0 28px rgba(255,217,61,.5); }
+.dc3 { color: #6bcb77; text-shadow: 0 0 10px #6bcb77, 0 0 28px rgba(107,203,119,.5); }
+.dc4 { color: #4d96ff; text-shadow: 0 0 10px #4d96ff, 0 0 28px rgba(77,150,255,.5); }
 
-/* 단어 사이 간격 벽돌 */
-.lb-gap { width: 10px; }
+.dc-gap { width: 14px; }
 
 /* ===== Main ===== */
 .main {
